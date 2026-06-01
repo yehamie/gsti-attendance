@@ -32,6 +32,7 @@
   const db = getDatabase(app);
 
   // Firebase에서 전체 데이터 실시간 구독
+  let firstLoad = true;
   onValue(ref(db, 'data'), (snapshot) => {
     const val = snapshot.val();
     if (val) {
@@ -43,6 +44,13 @@
     }
     renderAll();
     updateWhoAmI();
+    // 최초 1회만: Firebase 데이터 받은 후 웰컴 여부 판단
+    if (firstLoad) {
+      firstLoad = false;
+      // currentUserId가 없거나 members에 없으면 웰컴 표시
+      const isKnown = currentUserId && members.some(m => m.id === currentUserId);
+      if (!isKnown) openWelcome();
+    }
   });
 
   // Firebase 저장 함수 — window에 등록해서 기존 코드에서 호출
@@ -1060,12 +1068,7 @@ document.getElementById('n-text').addEventListener('keydown',e=>{ if(e.key==='En
 document.getElementById('notice-overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('notice-overlay')) closeNoticeModal(); });
 
 // ── 초기화 ──
-load(); // uid만 복원
-// Firebase 실시간 구독이 데이터 로드 후 renderAll() + updateWhoAmI() 자동 호출
-// 단, Firebase 응답 전 웰컴 화면 처리를 위해 잠시 후 확인
-setTimeout(()=>{
-  if(!currentUserId) openWelcome();
-}, 1200);
+load(); // uid만 복원 (웰컴 표시는 Firebase 응답 후 판단)
 </script>
 </body>
 </html>
