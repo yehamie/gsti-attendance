@@ -413,9 +413,11 @@ input:focus,select:focus{border-color:var(--bd2)}
       </div>
       <div class="field">
         <div class="flbl">근무 시간</div>
-        <div class="hrs-row">
-          <input class="hrs-inp" type="number" id="f-hrs" min="0.5" max="24" step="0.5" value="8">
+        <div class="hrs-row" style="gap:6px">
+          <input class="hrs-inp" type="number" id="f-hrs" min="0" max="23" step="1" value="8" style="width:64px">
           <span style="font-size:13px;color:var(--tx3)">시간</span>
+          <input class="hrs-inp" type="number" id="f-min" min="0" max="50" step="10" value="0" style="width:64px">
+          <span style="font-size:13px;color:var(--tx3)">분</span>
         </div>
       </div>
       <div class="form-actions">
@@ -736,11 +738,7 @@ function renderCalendar(){
 }
 
 // ── "내 기록만" 버튼 상태 동기화 ──
-function syncViewToggle(){
-  const isMyFilter = currentUserId && filter===currentUserId;
-  document.querySelector('[data-view="all"]').classList.toggle('on', !isMyFilter);
-  document.querySelector('[data-view="mine"]').classList.toggle('on', !!isMyFilter);
-}
+function syncViewToggle(){}
 
 // ── 본인 표시 업데이트 ──
 function updateWhoAmI(){
